@@ -17,7 +17,8 @@ fn evaluate_fixed_point(expression: &Expression) -> f64 {
         // if the decimal part is greater than or equal to 10
         if *decimal_part as f64 >= 10.0 {
             // value = whole_part + decimal_part/(10^(number of digits in the decimal part + 1))))
-            let value = ((*whole_part as f64
+            let value = (
+                (*whole_part as f64
                 + (*decimal_part as f64)
                     / (10.0 as f64)
                     .powi((*decimal_part as f64)
