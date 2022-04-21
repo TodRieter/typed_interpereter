@@ -15,7 +15,7 @@ fn evaluate_integer(expression: &Expression) -> f64 {
 fn evaluate_fixed_point(expression: &Expression) -> f64 {
     if let Expression::FixedPoint(whole_part, decimal_part) = expression {
         // if the decimal part is greater than or equal to 10
-        if *decimal_part as f64 >= 100.0 {
+        if *decimal_part as f64 >= 10.0 {
             // value = whole_part + decimal_part/(10^(number of digits in the decimal part + 1))))
             let value = ((*whole_part as f64
                 + (*decimal_part as f64)
@@ -49,12 +49,6 @@ fn evaluate_add_fixed_point(expressions: &Vec<Expression>) -> Expression {
             panic!("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH! that wasn't an fixedpoint. I can only add fixedpoints!")
         }
     }
-    // Expression::FixedPoint(
-    //     // the whole_part is just the total truncated
-    //     total.floor() as i32,
-    //     // the decimal part is two didgets multiply by the total 100 and get the last two didgets
-    //     (total * 100.0) as i32 % 100,
-    // )
     Expression::FixedPoint(whole_part, decimal_part)
 }
 
@@ -142,14 +136,14 @@ mod tests {
             crate::Expression::FixedPoint(1, 22),
         ]);
         let value = crate::evaluate(&expr);
-        assert_eq!(2.42, value, "2.22 expected, value = {}", value);
+        assert_eq!(2.42, value, "2.42 expected, value = {}", value);
     }
 
     #[test]
     fn test_fixed_point_addition_2() {
         let expr = crate::Expression::Addition(vec![
-            crate::Expression::FixedPoint(3, 1415),
-            crate::Expression::FixedPoint(3, 1415),
+            crate::Expression::FixedPoint(3, 141592653),
+            crate::Expression::FixedPoint(3, 141592653),
         ]);
         let value = crate::evaluate(&expr);
         assert_eq!(6.28, value, "6.28 expected, value = {}", value);
@@ -183,6 +177,26 @@ mod tests {
         ]);
         let value = crate::evaluate(&expr);
         assert_eq!(2.22, value, "2.22 expected, value = {}", value);
+    }
+
+    #[test]
+    fn test_fixed_point_addition_6() {
+        let expr = crate::Expression::Addition(vec![
+            crate::Expression::FixedPoint(0, 20),
+            crate::Expression::FixedPoint(0, 02), 
+        ]);
+        let value = crate::evaluate(&expr);
+        assert_eq!(0.22, value, "0.22 expected, value = {}", value);
+    }
+
+    #[test]
+    fn test_fixed_point_addition_7() {
+        let expr = crate::Expression::Addition(vec![
+            crate::Expression::FixedPoint(2, 0),
+            crate::Expression::FixedPoint(2, 0), 
+        ]);
+        let value = crate::evaluate(&expr);
+        assert_eq!(4.0, value, "4 expected, value = {}", value);
     }
 }
 fn main() {
